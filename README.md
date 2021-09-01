@@ -7,5 +7,3 @@ RHE 330C
 2. Parrots
 3. Corvids
 
-
-~~Peanut Butter Jelly Time.~~
