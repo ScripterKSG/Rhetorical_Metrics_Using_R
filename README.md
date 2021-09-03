@@ -7,3 +7,8 @@ RHE 330C
 2. Parrots
 3. Corvids
 
+> Typing something simple
+
+[Here's a URL to for UTrejects](utrejects.com)
+
+![Here's a cool Toucan picture](download.jpg)
