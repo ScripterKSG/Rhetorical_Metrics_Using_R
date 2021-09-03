@@ -9,6 +9,6 @@ RHE 330C
 
 > Typing something simple
 
-[Here's a URL to for UTrejects](utrejects.com)
+[Here's a URL to for UTrejects](https://www.tamu.edu/)
 
 ![Here's a cool Toucan picture](download.jpg)
