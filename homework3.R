@@ -30,9 +30,13 @@ df1 <- gop_df %>%
 df1 <- df1 %>% 
   bind_cols(textstat_readability(.$text,measure = c("Flesch","Flesch.Kincaid","SMOG")))
 
-#displays speakers and their average complexity by Flesch metric
-df1 %>% 
+#stores speakers and their average complexity by Flesch metric in df2
+#arrange verb ensures its sorted in descending complexity
+df2 <- df1 %>% 
   group_by(speaker) %>% 
-  summarise(ave_readability = mean(Flesch))
-  
+  summarise(ave_readability = mean(Flesch)) %>%
+  arrange(desc(ave_readability))
+
+#displays descending complexity info from df2
+df2
 
