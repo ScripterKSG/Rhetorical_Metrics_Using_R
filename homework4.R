@@ -20,6 +20,7 @@ gop_data <- map2(files,data, function(x,y) cbind(x,y))
 gop_df <- do.call(rbind,gop_data)
 names(gop_df)[1] <- "date"
 
+#uses gop_df to create data df1, which has the speaker and text length added
 df1 <- gop_df %>% 
   separate(date,"date",sep = "\\.") %>% 
   separate(text, "speaker", sep = ":", remove = FALSE) %>% 
@@ -31,11 +32,11 @@ df1 <- df1 %>%
   bind_cols(textstat_readability(.$text,measure = c("Flesch")))
 
 #removes unneeded columns of date, document and text length
-#df2 is the avg speaking complexity of each speaking turn
+#df2 is the avg speaking complexity (Flesch) of each speaking turn
 df2 <- df1[ -c(1,4,5)]
 
 #gets mean speaking difference of Trump compared to Cruz,
-#Walker and Bush
+#Walker and Bush. Complexity metric is Flesch 
 meanDiff <- df2 %>%
   dabest(speaker, Flesch, 
          idx = c("TRUMP", "CRUZ", "WALKER", "BUSH"), 
