@@ -34,7 +34,15 @@ df1 <- df1 %>%
 #df2 is the avg speaking complexity of each speaking turn
 df2 <- df1[ -c(1,4,5)]
 
+#gets mean speaking difference of Trump compared to Cruz,
+#Walker and Bush
+meanDiff <- df2 %>%
+  dabest(speaker, Flesch, 
+         idx = c("TRUMP", "CRUZ", "WALKER", "BUSH"), 
+         paired = FALSE) %>% mean_diff()
 
+#view results
+meanDiff
 
-
-  
+#plot results
+meanDiff %>% plot()  
