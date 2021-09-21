@@ -48,3 +48,18 @@ meanDiff
 
 #plot results
 meanDiff %>% plot()  
+
+
+
+#  Since the text is spoken, we utilize the ELF metric. Based on said metric,
+#there is a meaningful difference in the average speaking complexity between
+#Cruz, Walker and Bush when compared to Trump. None of the 95% confidence
+#intervals contain 0 and there is an mean difference 1.96, 1.89 and .994 for
+#Cruz, Walker and Bush respectively. Overall, each of the listed speakers
+#demonstrated a higher speaking complexity than Trump. However, we must note
+#that Walker had a very small sample size in comparison to Trump, and thus
+#has a much larger standard deviation. As a result, his bell curve distribution
+#is more flat and wide than Walker's and Bush's. Besides that,
+#Bush had the most similar plotted distribution to Trump and Cruz 
+#had the most outliers in speaking.
+
