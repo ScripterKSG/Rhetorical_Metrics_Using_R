@@ -3,6 +3,7 @@
 #PRE-FLIGHT 
 
 #Load Libraries 
+library(dplyr)
 library(tidyverse)
 library(quanteda)
 library(quanteda.textstats) #Due to a recent package update this line is not in the video. You will need to run it for this script to work. 
@@ -100,12 +101,13 @@ full_data %>%
   summarise(ave_readability = mean(Coleman.Liau.grade))
 
 # Determine which school's tweets are the most lexical diverse based on Dugast's Uber Index. 
-# Not done yet
-lexdiv <- textstat_lexdiv(corpus_dfm,measure=c("TTR","C","R","K","U")) %>% mutate(document = as.numeric(document))
 
+lexdiv <- textstat_lexdiv(corpus_dfm,measure=c("TTR","C","R","K","U")) %>% mutate(document = as.numeric(document))
+lexdiv <- lexdiv[is.finite(rowSums(lexdiv))]
 full_data <- data %>% left_join(lexdiv, by=c("status_id" = "document")) %>% unique()
+
 
 full_data %>% 
   group_by(school) %>% 
-  summarise(ave_lexdiv = mean(U, Inf.rm = TRUE, na.rm = TRUE))
+  summarise(ave_lexdiv = mean(U, na.rm = TRUE))
 

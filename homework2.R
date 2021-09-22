@@ -20,8 +20,8 @@ data <- map(files,function(x) read_csv(x))
 # - is also a list of 11
 gop_data <- map2(files,data, function(x,y) cbind(x,y))
 
-#defines a variable gop_df which stores text and date data from speakers such as
-#Trump, Paul and Carson
+#defines a variable gop_df which stores text and date data from speakers such
+#as Trump, Paul and Carson
 gop_df <- do.call(rbind,gop_data)
 
 
