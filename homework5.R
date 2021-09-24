@@ -18,4 +18,24 @@ total_words <- data_word_n %>%
   group_by(date) %>% 
   summarize(total = sum(n))
 
+#new dataframe from data_word_n and total_words combined
+combined_data <- left_join(data_word_n, total_words)
+
+# Get term frquency (TF),  invverse document frequency (IDF), and TF-IDF 
+combined_data  <- combined_data  %>%
+  # Calculates TF, IDF, and TF-IDF from word totals and TFs
+  bind_tf_idf(word, date, n)
+
+# Plot TF-IDF 
+combined_data  %>%
+  arrange(desc(tf_idf)) %>%
+  mutate(word = factor(word, levels = rev(unique(word)))) %>% 
+  group_by(date) %>% 
+  slice(1:10) %>% 
+  ungroup() %>%
+  ggplot(aes(word, tf_idf, fill = date)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = NULL, y = "tf-idf") +
+  facet_wrap(~date, ncol = 2, scales = "free") +
+  coord_flip()
 
