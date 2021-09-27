@@ -41,7 +41,15 @@ combined_data  %>%
   coord_flip()
 
 
-# #stores most common words said during each date
+# Commonly said terms during all the debates were "timer," "huckabee,"megyn," "rings," and "fiorina." However, the 
+# salient terms that tell us what was discussed during the individual debates more closely include "medicare," 
+# "marijuana," "vaccines," "guns," "veteran," "deportation" and "Palestinians." It's likely that 
+# the issues of medical care, gun laws, veteran aid and immigration were heavily discussed during the debates.
+
+
+
+
+# #stores most common words said during each date, not used
 # word_freq <- data_word_n %>%
 #   mutate(word = factor(word, levels = rev(unique(word)))) %>% 
 #   group_by(date) %>% 
