@@ -50,3 +50,12 @@ combined_tf_idf %>%
   xlab(NULL) +
   facet_wrap(~who, ncol = 3, scales = "free") +
   coord_flip()
+
+
+# The most salient differences involve Cruz and Rubio overall having more lemmatized trigrams about immigration 
+# than Trump. Trump has the lowest frequency of mentioning the topic of immigration.
+# Moreover, Cruz talks about immigration law and deportation more often than the Rubio and Trump.
+# On the other hand, Rubio most commonly references a legal immgration system and is more positive about
+# immigration overall, with words such as celebrate and reform being part of his trigrams. Finally,
+# Trump seems to have a very negative opinion on immigration, as the few times he discusses it he
+# talks about stopping immigration, how it is horribly illegal.
