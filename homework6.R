@@ -6,10 +6,10 @@ library(textstem)
 # Load data
 data <- read_csv("~/datasets/gop_debates.csv")
 
-# find and stores stem of immigration and lemmatized immgration
-stem_strings("immigration")
-lemmatize_strings("immigration")
-immigration_terms <- "immigr|immigration"
+# find and stores stem of immigration and lemmatized immgration and other synonyms
+stem_strings("immigration foreign deportation alien citizen")
+lemmatize_strings("immigration foreign deportation alien citizen")
+immigration_terms <- "immigr|immigration|foreign|deport|deportation|alien|citizen"
 
 # deals with removing stop words
 paste(stop_words$word, collapse = "|")
@@ -20,17 +20,32 @@ data_Speakers <- data %>%
   filter(who == "TRUMP" | who == "CRUZ" | who == "RUBIO") %>%
   group_by(who, text)
 
-# graphs lemmaitzed framegrams for trump, cruz, rubio
-data_Speakers %>%
+# gets total trigram data
+data_trigram_n <- data_Speakers %>%
   unnest_tokens(trigram, text, token = "ngrams", n=3) %>% 
-  count(trigram, sort = TRUE) %>%
+  count(trigram, sort = TRUE)
+
+# total number of trigrams said by each speaker
+total_trigrams <- data_trigram_n %>% 
+  group_by(who) %>% 
+  summarize(total = sum(n))
+
+# combined trigram data and total number of trigrams
+combined_data <- left_join(data_trigram_n, total_trigrams)
+
+combined_tf_idf <- combined_data  %>%
+  # Calculates TF, IDF, and TF-IDF from word totals and TFs
+  bind_tf_idf(trigram, who, n)
+
+# graphs lemmaitzed framegrams for trump, cruz, rubio
+combined_tf_idf %>%
   filter(str_detect(trigram,immigration_terms)) %>% 
   filter(str_count(trigram,stop_words_bounded) < 1) %>% 
   mutate(trigram = reorder(trigram, n)) %>%
   group_by(who) %>%
   slice(1:10) %>% # top 10 
   ungroup() %>%
-  ggplot(aes(x=trigram, y=n)) +
+  ggplot(aes(x=trigram, y=tf_idf)) +
   geom_col() +
   xlab(NULL) +
   facet_wrap(~who, ncol = 3, scales = "free") +
