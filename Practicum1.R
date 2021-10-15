@@ -35,3 +35,22 @@ pos_analysis %>% group_by(Type) %>%
 #Neg average
 neg_analysis %>% group_by(Type) %>% 
   summarise(ave_fear = mean(n))
+
+pos_dabest <- pos_analysis %>% 
+  dabest(x = Type,
+         y= n,
+         idx= c("spam","ham"),
+         paired = FALSE)
+
+neg_dabest <- neg_analysis %>% 
+  dabest(x = Type,
+         y= n,
+         idx= c("spam","ham"),
+         paired = FALSE)
+
+
+pos_dabest %>% mean_diff()
+neg_dabest %>% mean_diff()
+
+pos_dabest %>% mean_diff() %>% plot()
+neg_dabest %>% mean_diff() %>% plot()
