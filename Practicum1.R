@@ -5,7 +5,7 @@ library(fuzzyjoin)
 library(dabestr)
 
 #import data, add row IDs to each text, currently using stem analysis
-data <- read_csv("~/nguyen_jason/spam_ham.csv")%>% mutate(id=row.names(.))
+data <- read_csv("~/datasets/spam_ham.csv")%>% mutate(id=row.names(.))
 bing_pos_stem <- get_sentiments("bing") %>% filter(sentiment=="positive") %>% mutate(word=stem_words(word))
 bing_neg_stem <- get_sentiments("bing") %>% filter(sentiment=="negative") %>% mutate(word=stem_words(word))
 

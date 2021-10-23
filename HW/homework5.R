@@ -22,7 +22,7 @@ total_words <- data_word_n %>%
 #new dataframe from data_word_n and total_words combined
 combined_data <- left_join(data_word_n, total_words)
 
-# Get term frquency (TF),  invverse document frequency (IDF), and TF-IDF 
+# Get term frequency (TF),  inverse document frequency (IDF), and TF-IDF 
 combined_data  <- combined_data  %>%
   # Calculates TF, IDF, and TF-IDF from word totals and TFs
   bind_tf_idf(word, date, n)
@@ -41,23 +41,8 @@ combined_data  %>%
   coord_flip()
 
 
-# Commonly said terms during all the debates were "timer," "huckabee,"megyn," "rings," and "fiorina." However, the 
+# Commonly said terms during all the debates were "timer," "huckabee," "megyn," "rings," and "fiorina." However, the 
 # salient terms that tell us what was discussed during the individual debates more closely include "medicare," 
 # "marijuana," "vaccines," "guns," "veteran," "deportation" and "Palestinians." It's likely that 
 # the issues of medical care, gun laws, veteran aid and immigration were heavily discussed during the debates.
 
-
-
-
-# #stores most common words said during each date, not used
-# word_freq <- data_word_n %>%
-#   mutate(word = factor(word, levels = rev(unique(word)))) %>% 
-#   group_by(date) %>% 
-#   slice(1:10) %>% 
-#   ungroup() %>%
-#   ggplot(aes(x = reorder(word, n), y = n, fill=date)) +
-#   geom_col() +
-#   xlab(NULL) +
-#   coord_flip()+
-#   # Separate charts by date using facet_wrap()
-#   facet_wrap(~date, ncol = 3, scales = "free_y")
