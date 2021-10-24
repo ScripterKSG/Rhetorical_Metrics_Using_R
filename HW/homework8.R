@@ -1,0 +1,44 @@
+#load libraries 
+library(tidyverse)
+library(stringr)
+library(tidytext)
+library(textstem)
+
+#load data
+data <- read_csv("~/datasets/utreddit.csv")
+
+#dictionary with synonyms of word course, also some extra added words like professor and content
+sched <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Course_Scheduling.csv")
+
+#dictionary with synonyms of word majors, also added words like choosing, picking, choice
+major <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Major_Selection.csv")
+
+#dictionary with synonyms of word policy
+policy <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Policy_Questions.csv")
+
+#dictionary of synonyms of financial aid, very small because words like money or finance can apply
+#to several different topics so I avoided them
+finance <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Financial_Aid.csv")
+
+#dictionary of synonyms of house, housing and added words like dorm and apartments
+house <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Housing.csv")
+
+#dictionary of food, dinning, restaurants
+food <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Food.csv")
+
+#dictionary of synonyms of entertainment and added words like sports, game, play
+entertain <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Entertainment.csv")
+
+#dictionary of synonyms of humor
+humor <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Humor.csv")
+
+
+
+
+# Create a function that gets stems and lemmas and then creates the regex query for you. 
+regexify <- function(x){
+  stems <- stem_words(x)
+  lemmas <- lemmatize_words(x)
+  c(stems,lemmas,x) %>% unique %>% 
+    paste0(.,collapse = "|")
+}
