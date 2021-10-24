@@ -33,8 +33,6 @@ entertain <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Entertainment.csv")
 humor <- read_csv("~/nguyen_jason/HW/HW8_Dictionaries/Humor.csv")
 
 
-
-
 # Create a function that gets stems and lemmas and then creates the regex query for you. 
 regexify <- function(x){
   stems <- stem_words(x)
@@ -42,3 +40,30 @@ regexify <- function(x){
   c(stems,lemmas,x) %>% unique %>% 
     paste0(.,collapse = "|")
 }
+
+
+#Applying our regexify function to all our dictionaries
+better_sched <- regexify(sched$term)
+better_major <- regexify(major$term)
+better_policy <- regexify(policy$term)
+better_finance <- regexify(finance$term)
+better_house <- regexify(house$term)
+better_food <- regexify(food$term)
+better_entertain <- regexify(entertain$term)
+better_humor <- regexify(humor$term)
+
+
+#apply our dictionaries to our data in the same order we created/regexify them
+#checks both the title and post_text of the UTreddit post by pasting them together
+#into one message
+data <- data %>%
+  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         sched = ifelse(str_detect(Message,better_sched),1,0))
+
+data <- data %>%
+  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         major = ifelse(str_detect(Message,better_major),1,0))
+
+
+
+
