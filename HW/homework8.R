@@ -52,6 +52,17 @@ better_food <- regexify(food$term)
 better_entertain <- regexify(entertain$term)
 better_humor <- regexify(humor$term)
 
+#adds all terms to one value, used for the "Other" code
+all_terms <- paste(better_sched,
+                   better_major,
+                   better_policy,
+                   better_finance,
+                   better_house,
+                   better_food,
+                   better_entertain,
+                   better_humor,
+                   sep = "|")
+
 
 #apply our dictionaries to our data in the same order we created/regexify them
 #checks both the title and post_text of the UTreddit post by pasting them together
@@ -87,6 +98,12 @@ data <- data %>%
 data <- data %>%
   mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
          humor = ifelse(str_detect(Message,better_humor),1,0))
+
+#For Other code, done a bit differently since we check for UTreddit posts with NONE of
+#the content analysis terms
+data <- data %>%
+  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         other = ifelse(str_detect(Message,all_terms, negate = TRUE),1,0))
 
 
 
