@@ -64,6 +64,30 @@ data <- data %>%
   mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
          major = ifelse(str_detect(Message,better_major),1,0))
 
+data <- data %>%
+  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         policy = ifelse(str_detect(Message,better_policy),1,0))
+
+data <- data %>%
+  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         finaid = ifelse(str_detect(Message,better_finance),1,0))
+
+data <- data %>%
+  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         housing = ifelse(str_detect(Message,better_house),1,0))
+
+data <- data %>%
+  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         food = ifelse(str_detect(Message,better_food),1,0))
+
+data <- data %>%
+  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         entertain = ifelse(str_detect(Message,better_entertain),1,0))
+
+data <- data %>%
+  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         humor = ifelse(str_detect(Message,better_humor),1,0))
+
 
 
 
