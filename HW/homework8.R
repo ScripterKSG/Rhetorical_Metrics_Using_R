@@ -3,6 +3,7 @@ library(tidyverse)
 library(stringr)
 library(tidytext)
 library(textstem)
+library(dplyr)
 
 #load data
 data <- read_csv("~/datasets/utreddit.csv")
@@ -65,39 +66,19 @@ all_terms <- paste(better_sched,
 
 
 #apply our dictionaries to our data in the same order we created/regexify them
-#checks both the title and post_text of the UTreddit post by pasting them together
+#this checks both the title and post_text of the UTreddit post by pasting them together
 #into one message
 data <- data %>%
   mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
-         sched = ifelse(str_detect(Message,better_sched),1,0))
-
-data <- data %>%
-  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
-         major = ifelse(str_detect(Message,better_major),1,0))
-
-data <- data %>%
-  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
-         policy = ifelse(str_detect(Message,better_policy),1,0))
-
-data <- data %>%
-  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
-         finaid = ifelse(str_detect(Message,better_finance),1,0))
-
-data <- data %>%
-  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
-         housing = ifelse(str_detect(Message,better_house),1,0))
-
-data <- data %>%
-  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
-         food = ifelse(str_detect(Message,better_food),1,0))
-
-data <- data %>%
-  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
-         entertain = ifelse(str_detect(Message,better_entertain),1,0))
-
-data <- data %>%
-  mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
+         sched = ifelse(str_detect(Message,better_sched),1,0),
+         major = ifelse(str_detect(Message,better_major),1,0),
+         policy = ifelse(str_detect(Message,better_policy),1,0),
+         finaid = ifelse(str_detect(Message,better_finance),1,0),
+         housing = ifelse(str_detect(Message,better_house),1,0),
+         food = ifelse(str_detect(Message,better_food),1,0),
+         entertain = ifelse(str_detect(Message,better_entertain),1,0),
          humor = ifelse(str_detect(Message,better_humor),1,0))
+
 
 #For Other code, done a bit differently since we check for UTreddit posts with NONE of
 #the content analysis terms
@@ -105,6 +86,26 @@ data <- data %>%
   mutate(Message = paste(tolower(title), tolower(post_text), sep = " "),
          other = ifelse(str_detect(Message,all_terms, negate = TRUE),1,0))
 
+#total number of UTposts in our dataset
+total_posts = count(data)
 
+#Summarize, dplyer, gets percentages of each type of post in our data set
+percentages <- data %>%
+  summarise(Course = sum(sched)/total_posts,
+            Major = sum(major)/total_posts,
+            Policy = sum(policy)/total_posts,
+            FinAid = sum(finaid)/total_posts,
+            Housing = sum(housing)/total_posts,
+            Food = sum(food)/total_posts,
+            Entertain = sum(entertain)/total_posts,
+            Humor = sum(humor)/total_posts,
+            Other = sum(other)/total_posts)
 
+#displays percentages
+percentages
+
+#I will note that our dictionaries may be lacking in some aspects, but some posts are
+#too short/specific to classify. For example, one post is titled
+#"Waffles on sticks at new place in the Union" with no text_post
+#This is clearly talking about food but none of those words strongly fit the "food" schema 
 
