@@ -7,14 +7,14 @@ library(caret)
 library(pROC)
 
 #get dataset,
-#add unique row IDs
-#and label yes/no for spam
 data <- read_csv("~/datasets/spam_ham.csv") %>% 
   select(Type, Message) %>%
   unique()
 
+#add unique row IDs
 data$ID <- seq.int(nrow(data))
 
+#add label yes/no for spam
 data_labels <- data %>% mutate(spam = ifelse(Type=="spam","yes","no")) %>% select(ID,spam)
 
 
@@ -24,6 +24,8 @@ data_counts <- map_df(1:2, # map iterates over a list, in this case the list is 
   anti_join(stop_words, by = "word") %>%
   count(ID, word, sort = TRUE)
 
+
+# Get only terms and bigrams with a TF > 10 
 words_10 <- data_counts %>%
   group_by(word) %>%
   summarise(n = n()) %>% 
@@ -31,11 +33,13 @@ words_10 <- data_counts %>%
   select(word) %>%
   na.omit()
 
+# Create a document term matrix (DTM)
 data_dtm <- data_counts %>%
   right_join(words_10, by = "word") %>%
   bind_tf_idf(word, ID, n) %>%
   cast_dtm(ID, word, tf_idf)
 
+# Add labels to DTM and filter for complete cases
 data_engineered <- data_dtm %>% 
   as.matrix() %>% 
   as.data.frame() %>% 
@@ -44,6 +48,7 @@ data_engineered <- data_dtm %>%
   filter(complete.cases(.))  
 
 
+# Create training set based on an 80/20 split
 training_set <- data_engineered %>% slice_sample(prop =.8)
 
 # Create testing set
