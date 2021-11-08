@@ -40,3 +40,12 @@ data_engineered <- data_dtm %>%
   mutate(ID = as.numeric(dimnames(data_dtm)[[1]])) %>% 
   right_join(data) %>% 
   filter(complete.cases(.))  
+
+
+training_set <- data_engineered %>% slice_sample(prop =.8)
+
+# Create testing set
+test_set <- data_engineered %>% anti_join(training_set, by="ID") %>% select(-ID)
+
+# Create training set with No ID
+training_set_no_id <- training_set %>% select(-ID)
