@@ -1,11 +1,12 @@
-#import libraries
+#import libraries for machine learning
 library(tidyverse)
 library(stringr)
 library(tidytext)
 library(caret)
 library(pROC)
 
-#import data, replace 1 and 0 under hedge with yes and no
+#import data, replace 1 and 0 under hedge with yes and no for ease of use
+#filter out pmid and sent columns
 data <- read_csv("~/nguyen_jason/hedge_data.csv") %>% 
   select(text, hedge) %>% 
   mutate(hedge = ifelse(hedge=="1","yes","no")) %>% unique()
@@ -14,12 +15,9 @@ data <- read_csv("~/nguyen_jason/hedge_data.csv") %>%
 data$ID <- seq.int(nrow(data))
 
 
+# Terms were chosen from manually analyzing the text and referencing "Features of Academic Writing"
+# There is a space in front of " but" to filter out words like contribute and distribute, which have but
 
-# Much of the given text refer to AUC, p values, area under the curve and ci (confidence intervals)
-# However, it is difficult to account for this as both hedged and unhedged texts
-# refer to these statistical methods
-
-#There is a space in front of " but" to filter out words like contribute and distribute, which have but
 # Content Analysis for feature engineering
 data_engineered <- data %>% 
   mutate(text = str_replace_all(text,"[^[:graph:]]", " "),
@@ -46,7 +44,9 @@ test_set <- data_engineered %>% anti_join(training_set, by="ID") %>% select(-ID)
 training_set_no_id <- training_set %>% select(-ID)
 
 
-### Machine Learning attempts with knn, nb, nn
+### Machine Learning attempts
+
+# Train knn model
 knnfit <- train(hedge ~ ., 
                 data = training_set_no_id,
                 method = "knn",
@@ -55,22 +55,24 @@ knnfit <- train(hedge ~ .,
 # Predict against test set 
 knn_pred <- test_set %>% select(-hedge) %>% predict(knnfit, newdata = ., type = 'prob')
 
-
+# Set Train Control
 fitControl <- trainControl(method = "repeatedcv", 
                            number = 10, 
                            repeats = 5, 
                            classProbs = TRUE, 
                            summaryFunction = twoClassSummary)
 
-
+# Train nb model
 nb_mod = train(hedge ~ ., 
                data = training_set_no_id, 
                method="naive_bayes", 
                trControl = fitControl, 
                tuneGrid = expand.grid(usekernel=TRUE,laplace=0,adjust=1))
 
+# Predict against test set 
 nb_pred <- test_set %>% select(-hedge) %>% predict(nb_mod, newdata = ., type = 'prob')
 
+# Train nn model
 nnetFit <- train(hedge ~ ., 
                  data = training_set_no_id,
                  method = "nnet",
@@ -82,7 +84,7 @@ nnetFit <- train(hedge ~ .,
 # Predict against test set 
 nn_pred <- test_set %>% select(-hedge) %>% predict(nnetFit, newdata = ., type = 'prob')
 
-
+# Get area under the curve for our AI and each model
 knn_roc <- roc(test_set$hedge,knn_pred$yes)
 knn_roc
 
