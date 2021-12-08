@@ -8,21 +8,32 @@ library(caret)
 ### as we already saved a csv of a dataset from earlier
 
 ### Put project name, consumer and secret keys, access token and secret
+### Tokens are already saved in RDS files
 
-appname <- "RHE330_Project"
-key <- "7c15tU59YLsycvzwywlVDCLVw"
-secret <- "goTfoFOMIfySh7S0civ0B6ezrY7MqYYQNLYjgdW3IDN0Luum4p"
-atoken <- "1241260280228782081-7UFpZhmkjcr9NNO4IXJZHqgj4JbueJ"
-asecret<- "Ny7ePD8gOucoCS1qzlQTGmGHDqegBqLTAWUOdhp1XmqcC"
+# appname <- ""
+# key <- ""
+# secret <- ""
+# atoken <- ""
+# asecret<- ""
+
+
+### Saved Tokens to RDS files
+
+# saveRDS(appname, file = "appname.rds")
+# saveRDS(key, file = "key.rds")
+# saveRDS(secret, file = "secret.rds")
+# saveRDS(atoken, file = "atoken.rds")
+# saveRDS(asecret, file = "asecret.rds")
 
 ### create token
+### reads keys from RDS files
 
 twitter_token <- create_token(
-  app = appname,
-  consumer_key = key,
-  consumer_secret = secret,
-  access_token = atoken,
-  access_secret = asecret)
+  app = readRDS("appname.rds"),
+  consumer_key =  readRDS("key.rds"),
+  consumer_secret =  readRDS("secret.rds"),
+  access_token =  readRDS("atoken.rds"),
+  access_secret =  readRDS("asecret.rds"))
 
 ## search for tweets involving america and europe
 rt <- search_tweets("america", n = 500)
@@ -43,9 +54,9 @@ write.csv(data,"~/nguyen_jason/us_eu_tweets.csv", row.names = FALSE)
 
 
 
+####ACTUAL ML SCRIPT BELOW
 
 
-####ACTUAL SCRIPT BELOW
 data <- read_csv("~/nguyen_jason/us_eu_tweets.csv")
 data_labels <- data %>% select(ID, usa)
 
