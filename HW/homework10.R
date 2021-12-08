@@ -25,8 +25,8 @@ library(caret)
 # saveRDS(atoken, file = "atoken.rds")
 # saveRDS(asecret, file = "asecret.rds")
 
-### create token
-### reads keys from RDS files
+# create token
+# reads keys from RDS files
 
 twitter_token <- create_token(
   app = readRDS("appname.rds"),
@@ -35,7 +35,7 @@ twitter_token <- create_token(
   access_token =  readRDS("atoken.rds"),
   access_secret =  readRDS("asecret.rds"))
 
-## search for tweets involving america and europe
+# search for tweets involving america and europe
 rt <- search_tweets("america", n = 500)
 rt2 <- search_tweets("europe", n = 500)
 
@@ -45,18 +45,18 @@ names(rt)[2] <- "usa"
 rt2 <- rt2 %>% select(text, full_text) %>% mutate(full_text = "no")
 names(rt2)[2] <- "usa"
 
-#create our dataset
+# create our dataset
 data <- rbind(rt, rt2)
 data$ID <- seq.int(nrow(data))
 
-#save dataset
+# save dataset
 write.csv(data,"~/nguyen_jason/us_eu_tweets.csv", row.names = FALSE)
 
 
 
-####ACTUAL ML SCRIPT BELOW
+#### ML LEARNING CLASSIFICATION IS BELOW ####
 
-
+# Read and label data
 data <- read_csv("~/nguyen_jason/us_eu_tweets.csv")
 data_labels <- data %>% select(ID, usa)
 
