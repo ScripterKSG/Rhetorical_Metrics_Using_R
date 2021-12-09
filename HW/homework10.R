@@ -4,6 +4,7 @@
 library(rtweet)
 library(httr)
 library(tidyverse)
+library(tidytext)
 library(caret)
 
 ### First part of code demonstrates twitter scrapping, not necessary to run
@@ -93,6 +94,7 @@ words_10 <- words_10[!grepl("usa", words_10$word),]
 
 # Remove words containing accents in them and other non-English symbols
 words_10 <- words_10[!grepl("é", words_10$word),]
+
 words_10 <- words_10[!grepl("à", words_10$word),]
 words_10 <- words_10[!grepl("t.co", words_10$word),]
 
