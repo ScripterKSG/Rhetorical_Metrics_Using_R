@@ -1,4 +1,6 @@
 
+### The datasets used and the RDS files can be found on the git repo
+
 library(rtweet)
 library(httr)
 library(tidyverse)
@@ -17,7 +19,7 @@ library(caret)
 # asecret<- ""
 
 
-### Saved Tokens to RDS files
+### Save Tokens to RDS files
 
 # saveRDS(appname, file = "appname.rds")
 # saveRDS(key, file = "key.rds")
@@ -50,30 +52,55 @@ data <- rbind(rt, rt2)
 data$ID <- seq.int(nrow(data))
 
 # save dataset
-write.csv(data,"~/nguyen_jason/us_eu_tweets.csv", row.names = FALSE)
+#write.csv(data,"~/nguyen_jason/us_eu_tweets.csv", row.names = FALSE)
+#write.csv(data,"~/nguyen_jason/us_eu_tweets2.csv", row.names = FALSE)
+write.csv(data,"~/nguyen_jason/us_eu_tweets3.csv", row.names = FALSE)
 
 
 
 #### ML LEARNING CLASSIFICATION IS BELOW ####
 
-# Read and label data
-data <- read_csv("~/nguyen_jason/us_eu_tweets.csv")
+
+
+# Read data
+#data <- read_csv("~/nguyen_jason/us_eu_tweets.csv")
+#data <- read_csv("~/nguyen_jason/us_eu_tweets2.csv")
+data <- read_csv("~/nguyen_jason/us_eu_tweets3.csv")
+
+# Give each entry a unique ID
 data_labels <- data %>% select(ID, usa)
 
-# Tokenize by term and bigram and get TFs by status_id
+# Tokenize by term and bigram and get TFs by ID
 data_counts <- map_df(1:2, # map iterates over a list, in this case the list is 1:2
                       ~ unnest_tokens(data, word, text, 
                                       token = "ngrams", n = .x)) %>% # .x receives the values for the list
   anti_join(stop_words, by = "word") %>%
   count(ID, word, sort = TRUE)
 
-# Get only terms and bigrams with a TF > 10 
+# Get only terms and bigrams with a TF > 10  (framegrams)
 words_10 <- data_counts %>%
   group_by(word) %>%
   summarise(n = n()) %>% 
   filter(n >= 10) %>%
   select(word) %>%
   na.omit()
+
+# Remove website urls with http in them
+words_10 <- words_10[!grepl("http", words_10$word),]
+
+# Since we named our label column usa, we must remove usa entry to prevent errors when right joining
+words_10 <- words_10[!grepl("usa", words_10$word),]
+
+# Remove words containing accents in them and other non-English symbols
+words_10 <- words_10[!grepl("é", words_10$word),]
+words_10 <- words_10[!grepl("à", words_10$word),]
+words_10 <- words_10[!grepl("t.co", words_10$word),]
+
+# Remove Spanish words
+words_10 <- words_10[!grepl("el", words_10$word),]
+words_10 <- words_10[!grepl("es", words_10$word),]
+words_10 <- words_10[!grepl("du", words_10$word),]
+words_10 <- words_10[!grepl("en", words_10$word),]
 
 # Create a document term matrix (DTM)
 data_dtm <- data_counts %>%
