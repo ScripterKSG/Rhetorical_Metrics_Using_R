@@ -1,5 +1,5 @@
 
-### The datasets used and the RDS files can be found on the git repo
+### The datasets used and the RDS files can be found on the git repo ###
 
 library(rtweet)
 library(httr)
@@ -59,7 +59,7 @@ write.csv(data,"~/nguyen_jason/us_eu_tweets3.csv", row.names = FALSE)
 
 
 
-#### ML LEARNING CLASSIFICATION IS BELOW ####
+### ML LEARNING CLASSIFICATION IS BELOW ###
 
 
 
